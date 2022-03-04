@@ -1,0 +1,258 @@
+{
+    "store": {
+        "collections": [
+            {
+                "title": "Hats",
+                "routeName": "hats",
+                "items": [
+                    {
+                        "id": "kya4e98v",
+                        "imageUrl": "/images/shop-img/hats/cowboy-cap.jpg",
+                        "name": "Cowboy Cap",
+                        "price": 18
+                    },
+                    {
+                        "id": "kya4e98z",
+                        "name": "Blue Snapback",
+                        "price": 16,
+                        "imageUrl": "/images/shop-img/hats/blue-snapback.jpg"
+                    },
+                    {
+                        "id": "kya4e98s",
+                        "name": "Blue Beanie",
+                        "imageUrl": "/images/shop-img/hats/blue-beanie.jpg",
+                        "price": 18
+                    },
+                    {
+                        "id": "kya4e98u",
+                        "name": "Gray Brim",
+                        "imageUrl": "/images/shop-img/hats/gray-brim.png",
+                        "price": 25
+                    },
+                    {
+                        "id": "kya4e98w",
+                        "name": "Palm Tree Cap",
+                        "imageUrl": "/images/shop-img/hats/palm-tree-cap.png",
+                        "price": 14
+                    },
+                    {
+                        "id": "kya4e98r",
+                        "price": 25,
+                        "name": "Black Beanie",
+                        "imageUrl": "/images/shop-img/hats/black-beanie.jpg"
+                    },
+                    {
+                        "id": "kya4e98x",
+                        "name": "Red Beanie",
+                        "imageUrl": "/images/shop-img/hats/red-beanie.jpg",
+                        "price": 18
+                    },
+                    {
+                        "id": "kya4e98y",
+                        "price": 14,
+                        "imageUrl": "/images/shop-img/hats/wolf-cap.jpg",
+                        "name": "Wolf Cap"
+                    },
+                    {
+                        "id": "kya4e98t",
+                        "price": 35,
+                        "imageUrl": "/images/shop-img/hats/brown-cowboy.png",
+                        "name": "Brown Cowboy"
+                    }
+                ]
+            },
+            {
+                "title": "Sneakers",
+                "routeName": "sneakers",
+                "items": [
+                    {
+                        "id": "kya4e991",
+                        "price": 220,
+                        "name": "Adidas NMD",
+                        "imageUrl": "/images/shop-img/sneakers/adidas-nmd.png"
+                    },
+                    {
+                        "id": "kya4e994",
+                        "name": "Nike White AirForce",
+                        "price": 160,
+                        "imageUrl": "/images/shop-img/sneakers/white-nike-high-tops.png"
+                    },
+                    {
+                        "id": "kya4e992",
+                        "imageUrl": "/images/shop-img/sneakers/yeezy.png",
+                        "name": "Adidas Yeezy",
+                        "price": 280
+                    },
+                    {
+                        "id": "kya4e996",
+                        "name": "Nike Brown High Tops",
+                        "price": 160,
+                        "imageUrl": "/images/shop-img/sneakers/nike-brown.png"
+                    },
+                    {
+                        "id": "kya4e995",
+                        "imageUrl": "/images/shop-img/sneakers/nikes-red.png",
+                        "name": "Nike Red High Tops",
+                        "price": 160
+                    },
+                    {
+                        "id": "kya4e993",
+                        "name": "Black Converse",
+                        "imageUrl": "/images/shop-img/sneakers/black-converse.png",
+                        "price": 110
+                    },
+                    {
+                        "id": "kya4e998",
+                        "name": "Timberlands",
+                        "imageUrl": "/images/shop-img/sneakers/timberlands.png",
+                        "price": 200
+                    },
+                    {
+                        "id": "kya4e997",
+                        "name": "Air Jordan Limited",
+                        "price": 190,
+                        "imageUrl": "/images/shop-img/sneakers/nike-funky.png"
+                    }
+                ]
+            },
+            {
+                "title": "Jackets",
+                "routeName": "jackets",
+                "items": [
+                    {
+                        "id": "kya4e99e",
+                        "imageUrl": "/images/shop-img/jackets/brown-trench.png",
+                        "price": 185,
+                        "name": "Tan Trench"
+                    },
+                    {
+                        "id": "kya4e99b",
+                        "name": "Blue Jean Jacket",
+                        "imageUrl": "/images/shop-img/jackets/blue-jean-jacket.png",
+                        "price": 90
+                    },
+                    {
+                        "id": "kya4e99d",
+                        "name": "Brown Shearling",
+                        "imageUrl": "/images/shop-img/jackets/brown-shearling.png",
+                        "price": 165
+                    },
+                    {
+                        "id": "kya4e99a",
+                        "name": "Black Jean Shearling",
+                        "price": 125,
+                        "imageUrl": "/images/shop-img/jackets/black-shearling.png"
+                    },
+                    {
+                        "id": "kya4e99c",
+                        "price": 90,
+                        "name": "Brown Jean Jacket",
+                        "imageUrl": "/images/shop-img/jackets/brown-jean-jacket.jpg"
+                    }
+                ]
+            },
+            {
+                "title": "Womens",
+                "routeName": "womens",
+                "items": [
+                    {
+                        "id": "kya4e99i",
+                        "price": 100,
+                        "name": "White and yellow dress",
+                        "imageUrl": "/images/shop-img/womens/white-yellow-dress.jpg"
+                    },
+                    {
+                        "id": "kya4e99g",
+                        "imageUrl": "/images/shop-img/womens/pink-sweater.jpg",
+                        "name": "Pink Sweater",
+                        "price": 25
+                    },
+                    {
+                        "id": "kya4e99n",
+                        "price": 175,
+                        "name": "Chanel Hand Bag",
+                        "imageUrl": "/images/shop-img/womens/chanel-handbag.jpg"
+                    },
+                    {
+                        "id": "kya4e99j",
+                        "price": 100,
+                        "imageUrl": "/images/shop-img/womens/red-hijab.jpg",
+                        "name": "Red Hijab"
+                    },
+                    {
+                        "id": "kya4e99k",
+                        "name": "Celine Suede Calfskin Quilted Bag",
+                        "imageUrl": "/images/shop-img/womens/celine-suede-calfskin-quiltedbag.jpg",
+                        "price": 45
+                    },
+                    {
+                        "id": "kya4e99o",
+                        "price": 100,
+                        "imageUrl": "/images/shop-img/womens/michael-kors-korsbag.jpg",
+                        "name": "Michael-Kors Kors Bag"
+                    },
+                    {
+                        "id": "kya4e99l",
+                        "price": 65,
+                        "name": "Black Crossbody Bag",
+                        "imageUrl": "/images/shop-img/womens/black-crossbody-bag.jpg"
+                    },
+                    {
+                        "id": "kya4e99h",
+                        "price": 10,
+                        "name": "Brown Head Scraf",
+                        "imageUrl": "/images/shop-img/womens/brown-head-scraf.jpg"
+                    },
+                    {
+                        "id": "kya4e99m",
+                        "price": 90,
+                        "imageUrl": "/images/shop-img/womens/chanel-chainbag.jpg",
+                        "name": "Chanel Chain Bag"
+                    }
+                ]
+            },
+            {
+                "title": "Mens",
+                "routeName": "mens",
+                "items": [
+                    {
+                        "id": "kya4e99q",
+                        "price": 325,
+                        "name": "Camo Down Vest",
+                        "imageUrl": "/images/shop-img/mens/camo-vest.png"
+                    },
+                    {
+                        "id": "kya4e99s",
+                        "imageUrl": "/images/shop-img/mens/long-sleeve.png",
+                        "name": "Black & White Longsleeve",
+                        "price": 25
+                    },
+                    {
+                        "id": "kya4e99t",
+                        "imageUrl": "/images/shop-img/mens/pink-shirt.png",
+                        "price": 25,
+                        "name": "Pink T-shirt"
+                    },
+                    {
+                        "id": "kya4e99u",
+                        "price": 40,
+                        "imageUrl": "/images/shop-img/mens/roll-up-jean-shirt.png",
+                        "name": "Jean Long Sleeve"
+                    },
+                    {
+                        "id": "kya4e99v",
+                        "name": "Burgundy T-shirt",
+                        "imageUrl": "/images/shop-img/mens/polka-dot-shirt.png",
+                        "price": 25
+                    },
+                    {
+                        "id": "kya4e99r",
+                        "imageUrl": "/images/shop-img/mens/floral-shirt.png",
+                        "name": "Floral T-shirt",
+                        "price": 20
+                    }
+                ]
+            }
+        ]
+    }
+}
