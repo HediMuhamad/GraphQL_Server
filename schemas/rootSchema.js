@@ -8,7 +8,7 @@ const ItemsType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         price: { type: GraphQLInt },
-        imageUrl: { type: GraphQLString }
+        imageUrl: { type: GraphQLString },
     }
 });
 
@@ -17,45 +17,33 @@ const CollectionType = new GraphQLObjectType({
     fields: {
         title: { type: GraphQLString },
         routeName: { type: GraphQLString },
-        items: { type: new GraphQLList(ItemsType) },
-    }
-});
-
-const CollectionsType = new GraphQLObjectType({
-    name: 'collections',
-    fields: {
-        collection: { 
-            type: new GraphQLList(CollectionType),
-            resolve(parent, args){
-                console.log("CollectionsType: ");
-            }        
-        }
-    }
-});
-
-const StoreType = new GraphQLObjectType({
-    name: 'store',
-    fields: {
-        collections: { type: CollectionsType, }
+        items: {
+            type: new GraphQLList(ItemsType),
+            args: {
+                size:{
+                    type: GraphQLInt,
+                    description: "The number of items you need to get, use (-1) to get all we have.",
+                    defaultValue: -1,
+                }
+            },
+            resolve(parent, args){ 
+                args.size = args.size==-1 ? parent.items.length : args.size;
+                return parent.items.slice(0, args.size);  
+            }
+        },
     }
 });
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        store: {
-            type: StoreType,
-            resolve(parent, args){
-                console.log(parent);
-                return data.store;
-            }
-        },
         collections: {
             type: new GraphQLList(CollectionType),
             resolve(parent, args){
                 return data.store.collections;
             }
         },
+        
         collection: {
             type: CollectionType,
             args: {
