@@ -24,5 +24,5 @@ app.get('/', (req, res)=>{
 const PORT = process.env.PORT || 5500;
 app.listen(PORT, ()=>{
     console.log(`Current Device : 127.0.0.1:${PORT}`);
-    console.log(`Current Network: ${networkInterfaces().wlan0[0].address}:${PORT}`);
+    console.log(`Current Network: ${!networkInterfaces().wlan0 ? "Not connected" : networkInterfaces().wlan0[0].address+":"+PORT}`);
 })
