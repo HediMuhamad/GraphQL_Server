@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLList, GraphQLSchema, GraphQLString, GraphQLID, GraphQLInt, GraphQLNonNull, GraphQLInputObjectType } from "graphql";
+import { GraphQLObjectType, GraphQLList, GraphQLSchema, GraphQLString, GraphQLID, GraphQLInt, GraphQLNonNull, GraphQLInputObjectType, GraphQLBoolean } from "graphql";
 import data from '../data/store.json' assert { type: 'json' };
 
 const ItemDefs = (name)=>({
@@ -82,6 +82,28 @@ const addNewCollection = (parent, args)=>{
     return data.store.collections.find(item =>item.routeName===routeName);
 }
 
+const removeCollections = (parent, args)=>{
+    let {routeNames} = args;
+
+    const failedStuff = []
+
+    routeNames.forEach((routeName)=>{       
+        routeName = routeName.toLowerCase();
+
+        if(!data.store.collections.find((collection)=>collection.routeName===routeName)){
+            failedStuff.push(routeName);
+        }
+    
+        data.store.collections = data.store.collections.filter((collection)=>collection.routeName!==routeName); 
+    });
+
+    if(failedStuff.length>0){
+        throw Error(`Not exist route names: [${failedStuff}], other(s) removed successfully.`)
+    }
+
+    return true;
+}
+
 const addItems = (parent, args)=>{
     const { items } = args;
     const routeName = args.routeName.toLowerCase();
@@ -90,7 +112,7 @@ const addItems = (parent, args)=>{
 
     
     if(collectionIndex !== 0 && !collectionIndex){
-        throw Error(`There is no collection with route-name (${routeName}}) in the store.`);
+        throw Error(`There is no collection with route-name (${routeName}) in the store.`);
     }
 
     
@@ -131,6 +153,16 @@ const RootMutation = new GraphQLObjectType({
                 }
             },
             resolve: addNewCollection 
+        },
+        removeCollections: {
+            type: GraphQLBoolean,
+            args: {
+                routeNames: {
+                    type: new GraphQLNonNull(new GraphQLList(GraphQLString)),
+                    defaultValue: false
+                }
+            },
+            resolve: removeCollections
         },
         addItems: {
             type: CollectionType,
