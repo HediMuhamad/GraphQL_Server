@@ -3,7 +3,7 @@ import dotenv from "dotenv"
 import { networkInterfaces } from "os"
 import { graphqlHTTP } from "express-graphql";
 /********************************************/
-import rootSchema from "./schemas/rootSchema.js"
+import rootSchema from "./graphQL/rootSchema.js"
 
 dotenv.config();
 const app = express();

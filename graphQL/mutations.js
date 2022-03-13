@@ -1,67 +1,8 @@
 import { GraphQLObjectType, GraphQLList, GraphQLSchema, GraphQLString, GraphQLID, GraphQLInt, GraphQLNonNull, GraphQLInputObjectType, GraphQLBoolean } from "graphql";
 import data from '../data/store.json' assert { type: 'json' };
+import { CollectionType, ItemInputType } from "./types.js";
 
-const ItemDefs = (name)=>({
-    name: name,
-    fields: {
-        id: { type: new GraphQLNonNull(GraphQLID) },
-        name: { type: GraphQLString },
-        price: { type: GraphQLInt },
-        imageUrl: { type: GraphQLString },
-    }
-});
-
-const CollectionDefs = (CollTypeName) => ({
-    name: CollTypeName,
-    fields: {
-        title: { type: GraphQLString },
-        routeName: { type: GraphQLString },
-        items: {
-            type: new GraphQLList(ItemType),
-            args: {
-                size:{
-                    type: GraphQLInt,
-                    description: "The number of items you need to get, use (-1) to get all we have.",
-                    defaultValue: -1,
-                }
-            },
-            resolve(parent, args){ 
-                args.size = args.size==-1 ? parent.items.length : args.size;
-                return parent.items.slice(0, args.size);  
-            }
-        },
-    }
-});
-
-const ItemType = new GraphQLObjectType(ItemDefs("item"));
-const ItemInputType = new GraphQLInputObjectType(ItemDefs("item_input"));
-const CollectionType = new GraphQLObjectType(CollectionDefs("collection"));
-
-const RootQuery = new GraphQLObjectType({
-    name: 'RootQueryType',
-    fields: {
-        collections: {
-            type: new GraphQLList(CollectionType),
-            resolve: (parent, args) => (
-                data.store.collections
-            )
-        },
-        
-        collection: {
-            type: CollectionType,
-            args: {
-                routeName: {
-                    type: GraphQLID
-                }
-            },
-            resolve: (parent, args) => (
-                data.store.collections.find(collection => collection.routeName.toLowerCase === args.routeName.toLowerCase) 
-            )         
-        }
-        
-    }
-})
-
+/* Resolvers ******************************************************************* */
 const addNewCollection = (parent, args)=>{
     const { items } = args;
     let { title } = args;
@@ -137,6 +78,8 @@ const addItems = (parent, args)=>{
     return data.store.collections.find(item =>item.routeName===routeName);
 }
 
+/* Mutations ***************************************************************** */
+
 const RootMutation = new GraphQLObjectType({
     name: "RootMutation",
     fields: {
@@ -182,7 +125,4 @@ const RootMutation = new GraphQLObjectType({
 });
 
 
-export default new GraphQLSchema({
-    query: RootQuery,
-    mutation: RootMutation
-});
+export default RootMutation
