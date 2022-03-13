@@ -1,26 +1,40 @@
-import { GraphQLObjectType, GraphQLList, GraphQLSchema, GraphQLString, GraphQLID, GraphQLInt, GraphQLNonNull, GraphQLInputObjectType, GraphQLBoolean } from "graphql";
+import { GraphQLObjectType, GraphQLList, GraphQLString, GraphQLNonNull, GraphQLBoolean } from "graphql";
 import data from '../data/store.json' assert { type: 'json' };
-import { CollectionType, ItemInputType } from "./types.js";
+import { CollectionInputType, CollectionType, ItemInputType } from "./types.js";
 
 /* Resolvers ******************************************************************* */
-const addNewCollection = (parent, args)=>{
-    const { items } = args;
-    let { title } = args;
-    const routeName = title.toLowerCase();
+const addNewCollections = (parent, args)=>{
+    
+    const { collections } = args;
+    const failedStuff = []
 
-    title = title[0].toUpperCase() + title.slice(1, title.length).toLowerCase(); 
+    collections.forEach((collection)=>{
+        let { title } = collection
+        const { items } = collection;
+        const routeName = title.toLowerCase();
+        title = title[0].toUpperCase() + title.slice(1, title.length).toLowerCase(); 
+    
 
-    if(!!data.store.collections.find(item =>item.routeName===routeName)){
-        throw Error("A collection with same title and route-name exist");
-    }
+        if(!!data.store.collections.find(item =>item.routeName===routeName)){
+            failedStuff.push(title);
+            return;
+        }
+    
+        data.store.collections.push({
+            title,
+            routeName,
+            items
+        })
 
-    data.store.collections.push({
-        title,
-        routeName,
-        items
     })
 
-    return data.store.collections.find(item =>item.routeName===routeName);
+    if(failedStuff.length>0){
+        throw Error(`These collection(s) are/is already exist [${failedStuff}], other(s) added successfully.`)
+    }
+
+    return true;
+
+
 }
 
 const removeCollections = (parent, args)=>{
@@ -84,18 +98,13 @@ const RootMutation = new GraphQLObjectType({
     name: "RootMutation",
     fields: {
         addNewCollection: {
-            type: CollectionType,
+            type: GraphQLBoolean,
             args: {
-                title: {
-                    type: new GraphQLNonNull(GraphQLString),
-                    defaultValue: null
-                },
-                items: {
-                    type: new GraphQLNonNull(new GraphQLList(ItemInputType)),
-                    defaultValue: null
+                collections: {
+                    type: new GraphQLList(CollectionInputType),
                 }
             },
-            resolve: addNewCollection 
+            resolve: addNewCollections
         },
         removeCollections: {
             type: GraphQLBoolean,

@@ -32,6 +32,24 @@ const CollectionDefs = (CollTypeName) => ({
     }
 });
 
+const CollectionInputDefs = (CollTypeName) => ({
+    name: CollTypeName,
+    fields: {
+        title: { type: GraphQLString },
+        items: {
+            type: new GraphQLList(ItemInputType),
+            args: {
+                size:{
+                    type: GraphQLInt,
+                    description: "The number of items you need to get, use (-1) to get all we have.",
+                    defaultValue: -1,
+                }
+            }
+        },
+    }
+});
+
 export const ItemType = new GraphQLObjectType(ItemDefs("item"));
 export const ItemInputType = new GraphQLInputObjectType(ItemDefs("item_input"));
 export const CollectionType = new GraphQLObjectType(CollectionDefs("collection"));
+export const CollectionInputType = new GraphQLInputObjectType(CollectionInputDefs("collection_input"));
