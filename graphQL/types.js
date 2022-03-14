@@ -49,7 +49,18 @@ const CollectionInputDefs = (CollTypeName) => ({
     }
 });
 
+const ReturnDefs = (ReturnTypeName) => ({
+    name: ReturnTypeName,
+    fields: {
+        all: { type: new GraphQLList(GraphQLString) },
+        successed: { type: new GraphQLList(GraphQLString) },
+        failed: { type: new GraphQLList(GraphQLString) },
+        additionalInfo: { type: GraphQLString }
+    }
+});
+
 export const ItemType = new GraphQLObjectType(ItemDefs("item"));
 export const ItemInputType = new GraphQLInputObjectType(ItemDefs("item_input"));
 export const CollectionType = new GraphQLObjectType(CollectionDefs("collection"));
 export const CollectionInputType = new GraphQLInputObjectType(CollectionInputDefs("collection_input"));
+export const ReturnType = new GraphQLObjectType(ReturnDefs("return_schema"));
