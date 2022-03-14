@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLList, GraphQLString, GraphQLNonNull, GraphQLBoolean } from "graphql";
+import { GraphQLObjectType, GraphQLList, GraphQLString, GraphQLNonNull, GraphQLID } from "graphql";
 import data from '../data/store.json' assert { type: 'json' };
 import { CollectionInputType, CollectionType, ItemInputType, ReturnType } from "./types.js";
 
@@ -34,46 +34,51 @@ const addNewCollections = (parent, args)=>{
         all: failed.concat(successed),
         successed,
         failed,
-        additionalInfo: failed.length>0 ? "Existed collection/s failed in adding proccess." : null
+        additionalInfo: failed.length>0 ? "Existed collection(s) failed in adding proccess." : null
     }
 
 }
 
 const removeCollections = (parent, args)=>{
-    let {routeNames} = args;
+    const {routeNames} = args;
 
     const failed = [];
     const successed = [];
 
+    let collections = data.store.collections;
+
     routeNames.forEach((routeName)=>{       
         routeName = routeName.toLowerCase();
 
-        if(!data.store.collections.find((collection)=>collection.routeName===routeName)){
+        const collectionIndex = collections.findIndex((collection)=> collection.routeName===routeName);
+        
+        if(collectionIndex===-1){
             failed.push(routeName);
             return;
         }
         
         successed.push(routeName);
-        data.store.collections = data.store.collections.filter((collection)=>collection.routeName!==routeName); 
+        collections = collections.slice(0,collectionIndex).concat(collections.slice(collectionIndex+1, collections.length));
     });
-
+    
+    data.store.collections = collections;
 
     return {
         all: failed.concat(successed),
         successed,
         failed,
-        additionalInfo: failed.length>0 ? "Non-existed collection/s failed in removing proccess." : null
+        additionalInfo: failed.length>0 ? "Non-existed collection(s) failed in removing proccess." : null
     }
 }
 
 const addItems = (parent, args)=>{
     const routeName = args.routeName.toLowerCase();
 
-    const collectionIndex = data.store.collections.findIndex(item =>item.routeName===routeName)
-    if(collectionIndex !== 0 && !collectionIndex){
+    const collectionIndex = data.store.collections.findIndex(item=>item.routeName===routeName)
+    if(collectionIndex === -1){
         throw Error({
-            code: "444",
-            message: "collection not found",
+            errCode: "444",
+            errMessage: "Collection not found",
         });
     }
     
@@ -104,7 +109,46 @@ const addItems = (parent, args)=>{
         all: failed.concat(successed),
         successed,
         failed,
-        additionalInfo: failed.length>0 ? "Existed item/s failed in adding proccess" : null
+        additionalInfo: failed.length>0 ? "Existed item(s) failed in adding proccess" : null
+    }
+}
+
+const removeItems = (parent, args)=>{
+    const {routeName, itemsId} = args;
+
+    const collectionIndex = data.store.collections.findIndex(item =>item.routeName===routeName.toLowerCase())
+    if(collectionIndex === -1){
+        throw Error({
+            errCode: "444",
+            errMessage: "collection not found",
+        });
+    }
+
+    const failed = [];
+    const successed = [];
+
+
+    let storedItems = data.store.collections[collectionIndex].items;
+    
+    outer: 
+    for(let i=0;i<itemsId.length;i++){
+        for(let j=0;j<storedItems.length;j++){
+            if(itemsId[i] === storedItems[j].id){
+                storedItems = storedItems.slice(0, j).concat(storedItems.slice(j+1, storedItems.length));
+                successed.push(itemsId[i]);
+                continue outer;
+            }
+        }
+        failed.push(itemsId[i]);
+    }
+
+    data.store.collections[collectionIndex].items = storedItems;
+
+    return {
+        all: failed.concat(successed),
+        successed,
+        failed,
+        additionalInfo: failed.length>0 ? "Non-existed item(s) failed in removing proccess." : null
     }
 }
 
@@ -145,6 +189,20 @@ const RootMutation = new GraphQLObjectType({
                 }
             },
             resolve: addItems 
+        },
+        removeItems: {
+            type: ReturnType,
+            args: {
+                routeName: {
+                    type: new GraphQLNonNull(GraphQLString),
+                    defaultValue: null
+                },
+                itemsId: {
+                    type: new GraphQLNonNull(new GraphQLList(GraphQLID)),
+                    defaultValue: null
+                }
+            },
+            resolve: removeItems 
         },
     }
 });
