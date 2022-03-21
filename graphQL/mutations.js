@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLList, GraphQLString, GraphQLNonNull, GraphQLID } from "graphql";
+import { GraphQLObjectType, GraphQLList, GraphQLString, GraphQLNonNull, GraphQLID, GraphQLInt, GraphQLBoolean } from "graphql";
 import data from '../data/store.json' assert { type: 'json' };
 import { CollectionInputType, ItemInputType, ReturnType, StoreInputType } from "./types.js";
 import createCollection from "../models/generalCollectionsModelGenerator.js";
@@ -57,12 +57,51 @@ const removeStores = async (parent, args)=>{
     
     inputedStores.forEach(identifier=>(mongoose.Types.ObjectId.isValid(identifier)) ? idIdentified.push(identifier) : nameIdentified.push(identifier));
     
-    const {acknowledged, deletedCount} = await StoreModel.deleteMany({$or: [
+    const collectedInfo = await StoreModel.find({$or: [
         {name: { $in : nameIdentified}},
         {_id : { $in : idIdentified}}
     ]})
+    
+    const collections = [];
+    const stores = [];
 
-    return acknowledged ? `${deletedCount} successed from removing` : `failed`;
+    collectedInfo.forEach((store)=>{
+        stores.push(store._id.toString());
+        store.collections.forEach(collection=>{
+            collections.push(collection);
+        })
+    })
+
+    let dbCollections = await mongoose.connection.db.listCollections({}).toArray();
+
+
+    const promises = []
+
+    promises.push(StoreModel.deleteMany({_id : { $in : stores}}));
+    collections.forEach((collection)=>{
+        dbCollections.forEach(dbCollection =>{
+            dbCollection.name === collection ? promises.push(mongoose.connection.db.dropCollection(collection)) : {} ;  
+        });
+    })
+
+    let acknowledged, deletedStore, deletedCollection=0;
+
+    await 
+        Promise.allSettled(promises)
+        .then(fulfilled=>{
+            acknowledged = fulfilled[0].value.acknowledged;
+            deletedStore = fulfilled[0].value.deletedCount;
+            deletedCollection=fulfilled.length-1;
+        })
+        .catch(err=>{
+            console.log("err");
+        })
+
+    return { 
+        acknowledged: acknowledged,
+        remove_stores: deletedStore,
+        remove_collection: deletedCollection
+    }
 }
 
 
@@ -230,7 +269,14 @@ const RootMutation = new GraphQLObjectType({
             resolve: addNewStores
         },
         removeStores:{
-            type: GraphQLString,
+            type: new GraphQLObjectType({
+                name: "removed_store",
+                fields: {
+                    acknowledged: { type: GraphQLBoolean },
+                    remove_stores: { type: GraphQLInt },
+                    remove_collection: { type: GraphQLInt },    
+                }
+            }),
             args: {
                 stores: {
                     type: new GraphQLNonNull(new GraphQLList(GraphQLString)),
