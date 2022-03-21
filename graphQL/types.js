@@ -84,6 +84,15 @@ const StoreDefs = (StoreTypeName) => ({
     }
 });
 
+const StoreInputDefs = (StoreTypeName) => ({
+    name: StoreTypeName,
+    fields: {
+        name: { type: GraphQLString },
+        location: { type: GraphQLString },
+        collections: { type: new GraphQLList(GraphQLString), default: []},
+    }
+});
+
 
 const ReturnDefs = (ReturnTypeName) => ({
     name: ReturnTypeName,
@@ -101,4 +110,5 @@ export const ItemInputType = new GraphQLInputObjectType(ItemDefs("item_input"));
 export const CollectionType = new GraphQLObjectType(CollectionDefs("collection"));
 export const CollectionInputType = new GraphQLInputObjectType(CollectionInputDefs("collection_input"));
 export const StoreType = new GraphQLObjectType(StoreDefs("stores"));
+export const StoreInputType = new GraphQLInputObjectType(StoreInputDefs("stores_input"));
 export const ReturnType = new GraphQLObjectType(ReturnDefs("return_schema"));

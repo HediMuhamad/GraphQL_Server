@@ -1,8 +1,48 @@
-import { GraphQLObjectType, GraphQLList, GraphQLString, GraphQLNonNull, GraphQLID } from "graphql";
+import { GraphQLObjectType, GraphQLList, GraphQLString, GraphQLNonNull, GraphQLID, GraphQLError } from "graphql";
 import data from '../data/store.json' assert { type: 'json' };
-import { CollectionInputType, CollectionType, ItemInputType, ReturnType } from "./types.js";
+import { StoreInputType, CollectionInputType, ItemInputType, ReturnType } from "./types.js";
+/* ****************************** Models ****************************** */
+import StoreModel from "../models/storeModel.js"
 
 /* Resolvers ******************************************************************* */
+const addNewStores = async (parent, args)=>{
+
+    const failed = [];
+    const successed = []
+    const additionalInfoArr = []
+
+    const inputedStores = args.stores;
+    await Promise.allSettled(
+        inputedStores.map(
+            async ({name, location, collections})=>{
+                return new StoreModel({name, location, collections }).save()
+            }
+        )
+    ).then(fulfilled=>{
+        fulfilled.forEach(saving=>{
+            saving.status === 'fulfilled' ?
+            successed.push(saving.value.name) : 
+            (()=>{
+                failed.push(saving.reason.keyValue.name);
+                additionalInfoArr.push(`[11000]: STORE WITH NAME [${saving.reason.keyValue.name.toUpperCase()}] EXIST`);
+            })();
+        })
+    }).catch(err=>{
+        console.log(err);
+    })
+
+    let additionalInfo = "";
+    additionalInfo = additionalInfoArr.reduce((prev, curr)=>prev+=(curr+" || "),"")
+
+    return {
+        all: failed.concat(successed),
+        successed,
+        failed,
+        additionalInfo
+    }
+}
+
+
 const addNewCollections = (parent, args)=>{
 
     const { collections } = args;
@@ -157,6 +197,15 @@ const removeItems = (parent, args)=>{
 const RootMutation = new GraphQLObjectType({
     name: "RootMutation",
     fields: {
+        addNewStores:{
+            type: ReturnType,
+            args: {
+                stores:{
+                    type: new GraphQLNonNull(new GraphQLList(StoreInputType))
+                }
+            },
+            resolve: addNewStores
+        },
         addNewCollections: {
             type: ReturnType,
             args: {
