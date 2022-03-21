@@ -1,6 +1,7 @@
 import { GraphQLObjectType, GraphQLList, GraphQLString, GraphQLNonNull, GraphQLID } from "graphql";
 import data from '../data/store.json' assert { type: 'json' };
 import { CollectionInputType, ItemInputType, ReturnType, StoreInputType } from "./types.js";
+import createCollection from "../models/generalCollectionsModelGenerator.js";
 /* ****************************** Models ****************************** */
 import StoreModel from "../models/storeModel.js"
 import mongoose from "mongoose";
@@ -9,13 +10,18 @@ import mongoose from "mongoose";
 const addNewStores = async (parent, args)=>{
 
     const failed = [];
-    const successed = []
-    const additionalInfoArr = []
+    const successed = [];
+    const additionalInfoArr = [];
 
     const inputedStores = args.stores;
     await Promise.allSettled(
         inputedStores.map(
             async ({name, location, collections})=>{
+                collections = collections.map(collection=>{
+                    const collectionName = `${collection}.${name}`;
+                    createCollection(collectionName)
+                    return collectionName;
+                });
                 return new StoreModel({name, location, collections }).save()
             }
         )
@@ -56,9 +62,7 @@ const removeStores = async (parent, args)=>{
         {_id : { $in : idIdentified}}
     ]})
 
-
     return acknowledged ? `${deletedCount} successed from removing` : `failed`;
-
 }
 
 
