@@ -1,8 +1,9 @@
-import { GraphQLObjectType, GraphQLList, GraphQLString, GraphQLNonNull, GraphQLID, GraphQLError } from "graphql";
+import { GraphQLObjectType, GraphQLList, GraphQLString, GraphQLNonNull, GraphQLID } from "graphql";
 import data from '../data/store.json' assert { type: 'json' };
-import { StoreInputType, CollectionInputType, ItemInputType, ReturnType } from "./types.js";
+import { CollectionInputType, ItemInputType, ReturnType, StoreInputType } from "./types.js";
 /* ****************************** Models ****************************** */
 import StoreModel from "../models/storeModel.js"
+import mongoose from "mongoose";
 
 /* Resolvers ******************************************************************* */
 const addNewStores = async (parent, args)=>{
@@ -40,6 +41,24 @@ const addNewStores = async (parent, args)=>{
         failed,
         additionalInfo
     }
+}
+
+const removeStores = async (parent, args)=>{
+
+    const inputedStores = args.stores;
+    const nameIdentified = [];
+    const idIdentified = [];
+    
+    inputedStores.forEach(identifier=>(mongoose.Types.ObjectId.isValid(identifier)) ? idIdentified.push(identifier) : nameIdentified.push(identifier));
+    
+    const {acknowledged, deletedCount} = await StoreModel.deleteMany({$or: [
+        {name: { $in : nameIdentified}},
+        {_id : { $in : idIdentified}}
+    ]})
+
+
+    return acknowledged ? `${deletedCount} successed from removing` : `failed`;
+
 }
 
 
@@ -205,6 +224,16 @@ const RootMutation = new GraphQLObjectType({
                 }
             },
             resolve: addNewStores
+        },
+        removeStores:{
+            type: GraphQLString,
+            args: {
+                stores: {
+                    type: new GraphQLNonNull(new GraphQLList(GraphQLString)),
+                    description: "Hint: input store [name] or [id] inside an array to remove them and thier collections from the store lists"
+                }
+            },
+            resolve: removeStores
         },
         addNewCollections: {
             type: ReturnType,

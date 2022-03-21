@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLList, GraphQLSchema, GraphQLString, GraphQLID, GraphQLInt, GraphQLNonNull, GraphQLInputObjectType, GraphQLBoolean } from "graphql";
+import { GraphQLObjectType, GraphQLList, GraphQLString, GraphQLID, GraphQLInt, GraphQLNonNull, GraphQLInputObjectType } from "graphql";
 import createModel from "../models/generalCollectionsModelGenerator.js"
 
 const ItemDefs = (name)=>({
